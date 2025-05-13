@@ -163,7 +163,8 @@ async function registrar_usuario() {
     let apellidos_nombres = document.querySelector('#apellidos_nombres').value;
     let correo = document.querySelector('#correo').value;
     let telefono = document.querySelector('#telefono').value;
-    if (dni == "" || apellidos_nombres == "" ||correo == "" || telefono == "") {
+    let password = document.querySelector('#password').value;
+    if (dni == "" || apellidos_nombres == "" ||correo == "" || telefono == "" || password == "") {
         Swal.fire({
             type: 'error',
             title: 'Error',
