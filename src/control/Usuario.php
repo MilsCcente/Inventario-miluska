@@ -4,12 +4,10 @@ require_once('../model/admin-sesionModel.php');
 require_once('../model/admin-usuarioModel.php');
 require_once('../model/adminModel.php');
 $tipo = $_GET['tipo'];
-
 //instanciar la clase categoria model
 $objSesion = new SessionModel();
 $objUsuario = new UsuarioModel();
 $objAdmin = new AdminModel();
-
 //variables de sesion
 $id_sesion = $_POST['sesion'];
 $token = $_POST['token'];
@@ -86,7 +84,6 @@ if ($tipo == "registrar") {
     }
     echo json_encode($arr_Respuesta);
 }
-
 if ($tipo == "actualizar") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
@@ -144,4 +141,12 @@ if ($tipo == "reiniciar_password") {
         }
     }
     echo json_encode($arr_Respuesta);
+}
+
+if($tipo =="sent_email_password"){
+    $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
+    if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
+        $datos_sesion = $objSesion->buscarSesionLoginById($id_sesion);
+        print_r($datos_sesion);
+    }
 }

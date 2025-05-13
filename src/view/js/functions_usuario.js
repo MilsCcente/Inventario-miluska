@@ -215,7 +215,6 @@ async function registrar_usuario() {
         console.log("Oops, ocurrio un error " + e);
     }
 }
-
 async function actualizarUsuario(id) {
     let dni = document.getElementById('dni' + id).value;
     let nombres_apellidos = document.querySelector('#nombres_apellidos' + id).value;
@@ -333,4 +332,3 @@ async function reniciar_password(id) {
 
 
 }
-
