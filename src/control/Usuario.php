@@ -1,9 +1,18 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 session_start();
 require_once('../model/admin-sesionModel.php');
 require_once('../model/admin-usuarioModel.php');
 require_once('../model/adminModel.php');
+
+require_once '../../vendor/autoload.php';
+require '../../vendor/phpmailer/phpmailer/src/Exception.php';
+require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 $tipo = $_GET['tipo'];
+
 //instanciar la clase categoria model
 $objSesion = new SessionModel();
 $objUsuario = new UsuarioModel();
@@ -146,7 +155,143 @@ if ($tipo == "reiniciar_password") {
 if($tipo =="sent_email_password"){
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
-        $datos_sesion = $objSesion->buscarSesionLoginById($id_sesion);
-        print_r($datos_sesion);
+        $datos_sesion = $objSesion->buscarSesionLoginById($id_sesion); 
+        $datos_usuario = $objUsuario->buscarUsuarioById($datos_sesion->id_usuario);
+        $llave = $objAdmin->generar_llave(30);
+        $token  = password_hash($llave, PASSWORD_DEFAULT);
+        $update = $objUsuario->updateResetPassword($datos_sesion->id_usuario, $llave, 1);  
+
+        if($update) {
+            
+
+//Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+try {
+    //Server settings
+    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'mail.desarrolloweb2025.com
+';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'miluska@desarrolloweb2025.com';                     //SMTP username
+    $mail->Password   = 'ccente.25.Rima';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+    //Recipients
+    $mail->setFrom('miluska@desarrolloweb2025.com', 'cambio de contraseña');
+    $mail->addAddress($datos_usuario->correo, $datos_usuario->nombres_apellidos);     //Add a recipient
+    /*$mail->addAddress('ellen@example.com');               //Name is optional
+    $mail->addReplyTo('info@example.com', 'Information');
+    $mail->addCC('cc@example.com');
+    $mail->addBCC('bcc@example.com');
+
+    //Attachments
+    $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+*/
+    //Content
+    $mail->isHTML(true);    
+    $mail->CharSet ='UTF-8';                              //Set email format to HTML
+    $mail->Subject = 'cambio de  contraseña - sistema de inventario';
+    $mail->Body    = '<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correo Empresarial</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      color: #333333;
+      border: 1px solid #dddddd;
+    }
+    .header {
+      background-color: #004aad;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .content {
+      padding: 30px;
+    }
+    .content h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .button {
+      display: inline-block;
+      background-color: #004aad;
+      color: #ffffff !important;
+      padding: 12px 25px;
+      margin: 20px 0;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .footer {
+      background-color: #eeeeee;
+      text-align: center;
+      padding: 15px;
+      font-size: 12px;
+      color: #666666;
+    }
+    @media screen and (max-width: 600px) {
+      .content, .header, .footer {
+        padding: 15px !important;
+      }
+      .button {
+        padding: 10px 20px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Nombre de tu empresa</h2>
+    </div>
+    <div class="content">
+      <h1>Hola [Nombre del cliente],</h1>
+      <p>
+        Te saludamos cordialmente. Queremos informarte sobre nuestras últimas novedades y promociones exclusivas para ti.
+      </p>
+      <p>
+        ¡No te pierdas nuestras ofertas especiales por tiempo limitado!
+      </p>
+      <a href="https://www.tusitio.com/promocion" class="button">Ver más</a>
+      <p>Gracias por confiar en nosotros.</p>
+    </div>
+    <div class="footer">
+      © 2025 Nombre de tu empresa. Todos los derechos reservados.<br>
+      <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
+    </div>
+  </div>
+</body>
+</html>';
+
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+            echo"actualizado correctamente";
+        }else{
+            echo"fallo al actualizar";
+        }
+        //print_r($token);
     }
 }
