@@ -195,31 +195,50 @@ try {
     $mail->isHTML(true);    
     $mail->CharSet ='UTF-8';                              //Set email format to HTML
     $mail->Subject = 'cambio de  contraseña - sistema de inventario';
-    $mail->Body    = '<!DOCTYPE html>
+    $mail->Body    = '
+
+    
+
+    
+    <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Correo Empresarial</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background-color: #f8f6fc; /* Fondo suave lila/gris claro */
+      font-family: Arial, sans-serif;
+      color: #2e2e2e;
     }
     .container {
       max-width: 600px;
       margin: auto;
       background-color: #ffffff;
-      font-family: Arial, sans-serif;
-      color: #333333;
-      border: 1px solid #dddddd;
+      border: 1px solid #d1c4e9;
     }
     .header {
-      background-color: #004aad;
+      background-color: #5e35b1; /* Lila profundo acorde al logo */
       color: white;
       padding: 20px;
-      text-align: center;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .header img {
+      height: 80px;
+      width: auto;
+      border-radius: 4px;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
     }
     .content {
       padding: 30px;
@@ -227,6 +246,7 @@ try {
     .content h1 {
       font-size: 22px;
       margin-bottom: 20px;
+      color: #512da8;
     }
     .content p {
       font-size: 16px;
@@ -234,22 +254,34 @@ try {
     }
     .button {
       display: inline-block;
-      background-color: #004aad;
+      background-color: #512da8;
       color: #ffffff !important;
       padding: 12px 25px;
       margin: 20px 0;
       text-decoration: none;
       border-radius: 4px;
+      font-weight: bold;
     }
     .footer {
-      background-color: #eeeeee;
+      background-color: #ede7f6;
       text-align: center;
       padding: 15px;
       font-size: 12px;
-      color: #666666;
+      color: #5e35b1;
+    }
+    .footer a {
+      color: #512da8;
+      text-decoration: none;
     }
     @media screen and (max-width: 600px) {
-      .content, .header, .footer {
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .header img {
+        margin-bottom: 10px;
+      }
+      .content, .footer {
         padding: 15px !important;
       }
       .button {
@@ -261,7 +293,8 @@ try {
 <body>
   <div class="container">
     <div class="header">
-      <h2>Nombre de tu empresa</h2>
+      <img src="https://www.zarla.com/images/zarla-oficina-legal-1x1-2400x2400-20210607-84q9tchdhy7xjkmvqywr.png?crop=1:1,smart&width=250&dpr=2" alt="Logo de la empresa" />
+      <h2>Cunto Rojas & Asociados</h2>
     </div>
     <div class="content">
       <h1>Hola [Nombre del cliente],</h1>
@@ -275,12 +308,15 @@ try {
       <p>Gracias por confiar en nosotros.</p>
     </div>
     <div class="footer">
-      © 2025 Nombre de tu empresa. Todos los derechos reservados.<br>
+      © 2025 Cunto Rojas & Asociados. Todos los derechos reservados.<br>
       <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
     </div>
   </div>
 </body>
-</html>';
+</html>
+';
+
+
 
 
     $mail->send();
