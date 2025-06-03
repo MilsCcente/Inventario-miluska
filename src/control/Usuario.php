@@ -294,17 +294,18 @@ try {
   <div class="container">
     <div class="header">
       <img src="https://www.zarla.com/images/zarla-oficina-legal-1x1-2400x2400-20210607-84q9tchdhy7xjkmvqywr.png?crop=1:1,smart&width=250&dpr=2" alt="Logo de la empresa" />
-      <h2>Cunto Rojas & Asociados</h2>
+      <h2>Cunto Rojas & Abogados Asociados</h2>
     </div>
     <div class="content">
-      <h1>Hola [Nombre del cliente],</h1>
+      <h1> Solicitud de cambio de contraseña</h1>
+      <h1>Hola [Miluska],</h1>
       <p>
-        Te saludamos cordialmente. Queremos informarte sobre nuestras últimas novedades y promociones exclusivas para ti.
+        Te saludamos cordialmente. Queremos informarte sobre un movimiento interno de solicitud de cambio de contraseña.
       </p>
       <p>
-        ¡No te pierdas nuestras ofertas especiales por tiempo limitado!
+        ¡¿Estas segura de cambiar la contraseña?, si deseas continuar da click en el siguiente enlace!
       </p>
-      <a href="https://www.tusitio.com/promocion" class="button">Ver más</a>
+      <a href="https://www.tusitio.com/promocion" class="button">Cambiar</a>
       <p>Gracias por confiar en nosotros.</p>
     </div>
     <div class="footer">
