@@ -21,6 +21,17 @@ $objAdmin = new AdminModel();
 $id_sesion = $_POST['sesion'];
 $token = $_POST['token'];
 
+if($tipo== "validar_datos_reset_password"){
+  $id = $_POST['id'];
+  $token_email =$_POST['token'];
+  $arr_Respuesta = array('status' => false, 'msg' => 'link caducado');
+  $datos_usuario = $objUsuario->buscarUsuarioById($id_email);
+  if($datos_usuario->reset_password==1 && password_verify($datos_usuario->token_password.$token_email)){
+    $arr_Respuesta = array('status' => true, 'msg'=> 'Ok');
+  }
+  echo json_encode($arr_Respuesta);
+}
+
 if ($tipo == "listar_usuarios_ordenados_tabla") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
@@ -297,20 +308,21 @@ try {
       <h2>Cunto Rojas & Abogados Asociados</h2>
     </div>
     <div class="content">
-      <h1> Solicitud de cambio de contraseña</h1>
-      <h1>Hola [Miluska],</h1>
+      <h1>Hola ' .$datos_usuario->nombres_apellidos. ',</h1>
       <p>
         Te saludamos cordialmente. Queremos informarte sobre un movimiento interno de solicitud de cambio de contraseña.
       </p>
       <p>
-        ¡¿Estas segura de cambiar la contraseña?, si deseas continuar da click en el siguiente enlace!
+        ¡¿Estas segura de cambiar la contraseña?, si deseas continuar da click en el siguiente enlace! 
       </p>
-      <a href="https://www.tusitio.com/promocion" class="button">Cambiar</a>
+
+      <a href="'.BASE_URL.'reset-password?data='.$datos_usuario->id.'&data2='.$token.'" class="button">Cambiar mi contraseña</a>
       <p>Gracias por confiar en nosotros.</p>
+
     </div>
     <div class="footer">
       © 2025 Cunto Rojas & Asociados. Todos los derechos reservados.<br>
-      <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
+      <a href="'.BASE_URL.'">Cancelar suscripción</a>
     </div>
   </div>
 </body>

@@ -44,7 +44,7 @@ if (isset($_SESSION['sesion_id']) && isset($_SESSION['sesion_token'])) {
     }
 }
 
-if ($vista == "login" || $vista == "404") {
+if ($vista == "login" || $vista == "404" || $vista=="reset-password") {
     require_once "./src/view/" . $vista . ".php";
 } else {
 
