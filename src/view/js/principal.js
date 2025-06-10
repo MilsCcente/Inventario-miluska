@@ -173,6 +173,8 @@ async function validar_datos_reset_password(){
     const formData = new FormData();
     formData.append('id', id);
     formData.append('token', token);
+    formData.append('sesion','');
+
     try {
         let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=validar_datos_reset_password', {
             method: 'POST',
@@ -181,9 +183,82 @@ async function validar_datos_reset_password(){
             body: formData
         });
         let json = await respuesta.json();
-        if (json.status) {
+        if (json.status ==false) {
+            Swal.fire({
+                type: 'error',
+                title: 'Error de Sesión',
+                text: "link Caducada, verifique su correo",
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                timer: 1000
+            });
+            let formulario = document.getElementById('frm_reset-password');
+            formulario.innerHTML = `
+    <div style="
+        padding: 30px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, rgba(163, 117, 255, 0.9), rgba(112, 76, 182, 0.9), rgba(85, 58, 140, 0.9));
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        max-width: 500px;
+        margin: 50px auto;
+    ">
+        <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Advertencia" style="width: 80px; margin-bottom: 20px; filter: brightness(1.1);" />
+        <h2 style="margin-bottom: 15px;">Enlace Caducado</h2>
+        <p>El enlace para restablecer la contraseña ha caducado. Por favor, solicite uno nuevo desde la página de inicio de sesión.</p>
+        <a href="${base_url}login" style="
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s ease;
+        " 
+        onmouseover="this.style.backgroundColor='rgba(255,255,255,0.3)'; this.style.transform='scale(1.05)'" 
+        onmouseout="this.style.backgroundColor='rgba(255,255,255,0.15)'; this.style.transform='scale(1)'">
+            Ir al Login
+        </a>
+    </div>
+`;
+//termina
+
+            //location.replace(base_url + "login");(((((((((((((hacer)))))))))))))
         }
     } catch (error) {
-        
+        console.log("Error al validar datos" + e);
     }
+}
+
+function validar_imput_password() {
+    let pass1 = document.getElementById('password').value;
+    let pass2 = document.getElementById('password1').value;
+    if (pass1 !==pass2) {
+        Swal.fire({
+            type: 'error',
+            title:'error',
+            text: "contraseñas no coinciden",
+            footer: '',
+            timer: 1500
+        });
+        return;
+    }
+    if(pass1.length<8 && pass2.length<8) {
+        Swal.fire({
+            type: 'error',
+            title:'error',
+            text: " La contraseña tiene que ser minimo de 8 caracteres",
+            footer: '',
+            timer: 1500
+        });
+        return;
+    }else{
+    actualizar_password();
+   }
+}
+async function actualizar_password() {
 }
