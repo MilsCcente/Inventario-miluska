@@ -344,3 +344,39 @@ try {
         //print_r($token);
     }
 }
+
+
+
+if ($tipo == "actualizar_password_reset") {
+    $id_usuario = $_POST['id'];
+    $nueva_password = $_POST['password'];
+    $token_email = $_POST['token'];
+    
+    $arr_Respuesta = array('status' => false, 'msg' => 'Error al actualizar contraseña');
+
+    $datos_usuario = $objUsuario->buscarUsuarioById($id_usuario);
+    
+    if ($datos_usuario && $datos_usuario->reset_password == 1 && password_verify($datos_usuario->token_password, $token_email)) {
+        $resultado = $objUsuario->actualizarPassworde($id_usuario, $nueva_password);
+        
+        if ($resultado) {
+            $arr_Respuesta = array(
+                'status' => true, 
+                'msg' => 'Contraseña actualizada correctamente'
+            );
+        } else {
+            $arr_Respuesta = array(
+                'status' => false, 
+                'msg' => 'Error al guardar en la base de datos'
+            );
+        }
+    } else {
+        $arr_Respuesta = array(
+            'status' => false, 
+            'msg' => 'Token inválido o expirado'
+        );
+    }
+    
+    echo json_encode($arr_Respuesta);
+}
+ 

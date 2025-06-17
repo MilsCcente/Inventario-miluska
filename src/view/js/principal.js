@@ -260,4 +260,60 @@ function validar_imput_password() {
    }
 }
 async function actualizar_password() {
+    
+    let id = document.getElementById('data').value;
+    let token = document.getElementById('data2').value;
+    let nueva_password = document.getElementById('password').value;
+
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('token', token);
+    formData.append('password', nueva_password);
+    formData.append('sesion', '');
+    
+    try {
+        
+        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=actualizar_password_reset', {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        
+        let json = await respuesta.json();
+        
+        if (json.status == true) {
+            Swal.fire({
+                type: 'success',
+                title: 'Éxito',
+                text: json.msg,
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                timer: 2000
+            }).then(() => {
+                location.replace(base_url + "login");
+            });
+        } else {
+            Swal.fire({
+                type: 'error',
+                title: 'Error',
+                text: json.msg,
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                timer: 2000
+            });
+        }
+        
+    } catch (error) {
+        console.log("Error al actualizar contraseña: " + error);
+        Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: 'Error de conexión. Intente nuevamente.',
+            confirmButtonClass: 'btn btn-confirm mt-2',
+            footer: '',
+            timer: 2000
+        });
+    }
 }
+
