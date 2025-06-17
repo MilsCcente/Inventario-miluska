@@ -273,7 +273,7 @@ async function actualizar_password() {
     
     try {
         
-        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=actualizar_password_reset', {
+        let respuesta = await fetch(base_url_server + 'src/control/Usuario.php?tipo=actualizar_nuevo_password', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',

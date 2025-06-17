@@ -347,7 +347,7 @@ try {
 
 
 
-if ($tipo == "actualizar_password_reset") {
+if ($tipo == "actualizar_nuevo_password") {
     $id_usuario = $_POST['id'];
     $nueva_password = $_POST['password'];
     $token_email = $_POST['token'];
@@ -362,12 +362,12 @@ if ($tipo == "actualizar_password_reset") {
         if ($resultado) {
             $arr_Respuesta = array(
                 'status' => true, 
-                'msg' => 'Contraseña actualizada correctamente'
+                'msg' => 'La contraseña se actualizo correctamente'
             );
         } else {
             $arr_Respuesta = array(
                 'status' => false, 
-                'msg' => 'Error al guardar en la base de datos'
+                'msg' => 'Error al guardar datos'
             );
         }
     } else {
