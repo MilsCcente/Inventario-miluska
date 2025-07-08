@@ -27,11 +27,159 @@ $curl = curl_init(); //inicia la sesión cURL
 
     if ($err) {
         echo "cURL Error #:" . $err; // mostramos el error
-    } else {
-        $respuesta = json_decode($response);
-        print_r ($respuesta); 
-        
-        // en caso de funcionar correctamente
+    } else { // en caso de funcionar correctamente
         /*echo $_SESSION['sesion_sigi_id'];
         echo $_SESSION['sesion_sigi_token'];*/
+        $respuesta = json_decode($response);
+        //print_r ($respuesta);   
+              
+       
+
+  
+?>
+<!--
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formato de Movimiento de Bienes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
     }
+    .header, .footer {
+      margin-bottom: 20px;
+    }
+    .titulo {
+      font-weight: bold;
+    }
+    .motivo {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    .firma {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 60px;
+    }
+    .firma div {
+      text-align: center;
+    }
+    .espacio {
+      height: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <p><span class="titulo">ENTIDAD :</span> DIRECCION REGIONAL DE EDUCACION - AYACUCHO</p>
+    <p><span class="titulo">AREA :</span> OFICINA DE ADMINISTRACIÓN</p>
+
+    <p><span class="titulo">ORIGEN :</span> <?php echo $respuesta->amb_origen->codigo.'_'.$respuesta->amb_origen->detalle;?> </p>
+
+    <p><span class="titulo">DESTINO :</span> <?php echo $respuesta->amb_destino->codigo.'_'.$respuesta->amb_destino->detalle;?></p>
+  </div>
+
+  <div class="motivo">MOTIVO (*) :<?php echo $respuesta->movimiento->descripcion;?></div>
+
+  <table>
+    <thead>
+        <tr>
+           
+            
+        </tr>
+    </thead>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ITEM</th>
+        <th>CODIGO PATRIMONIAL</th>
+        <th>NOMBRE DEL BIEN</th>
+        <th>MARCA</th>
+        <th>COLOR</th>
+        <th>MODELO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      <?php
+            $contador =1;
+            foreach($respuesta-> detalle as $bien){
+                echo"<tr>";
+                echo"<td>". $contador."</td>";
+                echo"<td>". $bien->cod_patrimonial."</td>";
+                echo"<td>".$bien->denominacion."</td>";
+                echo"<td>".$bien->marca."</td>";
+                echo"<td>".$bien->modelo."</td>";
+                echo"<td>".$bien->color."</td>";
+                echo"<td>".$bien->estado_conservacion."</td>";
+
+            }
+            ?>
+      </tr>
+      <tr>
+        <td>02</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <p>Ayacucho, _________ de __________ del 2024</p>
+  </div>
+
+  <div class="firma">
+    <div>
+      <div>------------------------------</div>
+      <div>ENTREGUE CONFORME</div>
+    </div>
+    <div>
+      <div>------------------------------</div>
+      <div>RECIBÍ CONFORME</div>
+    </div>
+  </div>
+
+</body>
+</html>
+-->
+<?php
+require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
+$pdf=new TCPDF();
+$pdf->SetCreador(PDF_CREATOR);
+$pdf->SetAuthor('Miluska');
+$pdf->SetTitle('Reporte de movimiento');
+
+//asignar 
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+//salto de pagina automatico
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+// set font
+$pdf->SetFont('dejavusans', '', 10);
+
+
+
+  }
