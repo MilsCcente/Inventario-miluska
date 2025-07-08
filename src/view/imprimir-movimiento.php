@@ -32,17 +32,14 @@ $curl = curl_init(); //inicia la sesión cURL
         echo $_SESSION['sesion_sigi_token'];*/
         $respuesta = json_decode($response);
         //print_r ($respuesta);   
-              
-       
-
-  
-?>
-<!--
-<!DOCTYPE html>
+        $contenido_pdf='';
+        $contenido_pdf.='
+        <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Formato de Movimiento de Bienes</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -85,27 +82,17 @@ $curl = curl_init(); //inicia la sesión cURL
   </style>
 </head>
 <body>
-
+<h5>PAPELETA DE ROTACION DE BIENES</h5>
   <div class="header">
     <p><span class="titulo">ENTIDAD :</span> DIRECCION REGIONAL DE EDUCACION - AYACUCHO</p>
     <p><span class="titulo">AREA :</span> OFICINA DE ADMINISTRACIÓN</p>
 
-    <p><span class="titulo">ORIGEN :</span> <?php echo $respuesta->amb_origen->codigo.'_'.$respuesta->amb_origen->detalle;?> </p>
+    <p><span class="titulo">ORIGEN :</span> '.  $respuesta->amb_origen->codigo.'-'.$respuesta->amb_origen->detalle.' </p>
 
-    <p><span class="titulo">DESTINO :</span> <?php echo $respuesta->amb_destino->codigo.'_'.$respuesta->amb_destino->detalle;?></p>
+    <p><span class="titulo">DESTINO :</span> '.  $respuesta->amb_destino->codigo.'-'.$respuesta->amb_destino->detalle.'</p>
   </div>
 
-  <div class="motivo">MOTIVO (*) :<?php echo $respuesta->movimiento->descripcion;?></div>
-
-  <table>
-    <thead>
-        <tr>
-           
-            
-        </tr>
-    </thead>
-  </table>
-
+  <div class="motivo">MOTIVO (*) :'.$respuesta->movimiento->descripcion.'</div>
   <table>
     <thead>
       <tr>
@@ -119,56 +106,56 @@ $curl = curl_init(); //inicia la sesión cURL
       </tr>
     </thead>
     <tbody>
-      <tr>
-      <?php
-            $contador =1;
-            foreach($respuesta-> detalle as $bien){
-                echo"<tr>";
-                echo"<td>". $contador."</td>";
-                echo"<td>". $bien->cod_patrimonial."</td>";
-                echo"<td>".$bien->denominacion."</td>";
-                echo"<td>".$bien->marca."</td>";
-                echo"<td>".$bien->modelo."</td>";
-                echo"<td>".$bien->color."</td>";
-                echo"<td>".$bien->estado_conservacion."</td>";
+        ';        
+  
+?>
 
-            }
+
+      <tr>
+      <?php 
+     $contador = 1;
+     foreach ($respuesta->detalle as $detalle) {
+        $contenido_pdf .= "<tr>";
+        $contenido_pdf .= "<td>".$contador."</td>";
+        $contenido_pdf .= "<td>".$detalle->cod_patrimonial."</td>";
+        $contenido_pdf .= "<td>".$detalle->denominacion."</td>";
+        $contenido_pdf .= "<td>".$detalle->marca."</td>";
+        $contenido_pdf .= "<td>".$detalle->modelo."</td>";
+        $contenido_pdf .= "<td>".$detalle->color."</td>";
+        $contenido_pdf .= "<td>".$detalle->estado_conservacion."</td>";
+        $contenido_pdf .= "</tr>";
+        $contador+=1;
+
+     }
+
+     $contenido_pdf.='
+     </tbody>
+   </table>
+ 
+   <div class="footer">
+     <p>Ayacucho, _________ de __________ del 2024</p>
+   </div>
+ 
+   <div class="firma">
+     <div>
+       <div>------------------------------</div>
+       <div>ENTREGUE CONFORME</div>
+     </div>
+     <div>
+       <div>------------------------------</div>
+       <div>RECIBÍ CONFORME</div>
+     </div>
+   </div>
+ 
+ </body>
+ </html>
+ ';
             ?>
-      </tr>
-      <tr>
-        <td>02</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="footer">
-    <p>Ayacucho, _________ de __________ del 2024</p>
-  </div>
-
-  <div class="firma">
-    <div>
-      <div>------------------------------</div>
-      <div>ENTREGUE CONFORME</div>
-    </div>
-    <div>
-      <div>------------------------------</div>
-      <div>RECIBÍ CONFORME</div>
-    </div>
-  </div>
-
-</body>
-</html>
--->
+    
 <?php
 require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
-$pdf=new TCPDF();
-$pdf->SetCreador(PDF_CREATOR);
+$pdf = new TCPDF();
+$pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Miluska');
 $pdf->SetTitle('Reporte de movimiento');
 
@@ -178,8 +165,12 @@ $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
 // set font
-$pdf->SetFont('dejavusans', '', 10);
+$pdf->SetFont('helvetica', 'B', 12);
 
-
+//add a page
+$pdf->AddPage();
+$pdf->writeHTML($contenido_pdf);
+ob_clean();
+$pdf->Output('reporte_movimiento.pdf', 'I');
 
   }
