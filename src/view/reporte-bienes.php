@@ -1,40 +1,67 @@
 <?php
-
 require './vendor/autoload.php';
+require_once './src/library/conexionn.php'; // Ruta corregida a tu archivo conexión
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+// OBTENER CONEXIÓN DESDE LA CLASE Conexion
+$conexion = Conexion::connect();
+
+// CONSULTA A LA BD
+$sql = "SELECT * FROM bienes ORDER BY id ASC";
+$resultado = $conexion->query($sql);
+
+// CREAR EXCEL
 $spreadsheet = new Spreadsheet();
-$spreadsheet->getProperties()->setCreator("yp")->setLastModifiedBy("yo")->setTitle("yo")->setDescription("yo");
-$activeWorksheet = $spreadsheet->getActiveSheet();
-$activeWorksheet->setTitle("hoja 1");
-$activeWorksheet->setCellValue('A1', 'Hola mundo !');
-$activeWorksheet->setCellValue('A2', 'DNI');
+$spreadsheet->getProperties()
+    ->setCreator("yp")
+    ->setLastModifiedBy("yo")
+    ->setTitle("Bienes")
+    ->setDescription("Listado de bienes");
 
+$hoja = $spreadsheet->getActiveSheet();
+$hoja->setTitle("Bienes");
 
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-
-// Números del 1 al 30 en la fila 3, desde la columna A hacia la derecha
-//for ($i = 1; $i <= 30; $i++) {
- //   $columna = Coordinate::stringFromColumnIndex($i); // A, B, C, ..., AD
-   // $activeWorksheet->setCellValue($columna . '3', $i); // Escribe en fila 3
-//}
-$filaInicio = 2; // Empezamos en la fila 2
-
-for ($i = 1; $i <= 10; $i++) {
-    $fila = $filaInicio + ($i - 1); // Fila actual
-    
-    $activeWorksheet->setCellValue('A' . $fila, 1);         // 1
-    $activeWorksheet->setCellValue('B' . $fila, 'x');       // x
-    $activeWorksheet->setCellValue('C' . $fila, $i);        // i
-    $activeWorksheet->setCellValue('D' . $fila, '=');       // =
-    $activeWorksheet->setCellValue('E' . $fila, 1 * $i);    // resultado
+// FUNCIÓN PARA CONVERTIR ÍNDICES A LETRAS DE COLUMNA
+function getColLetter($index) {
+    $letter = '';
+    while ($index > 0) {
+        $index--;
+        $letter = chr(65 + ($index % 26)) . $letter;
+        $index = intval($index / 26);
+    }
+    return $letter;
 }
 
+// LLENAR DATOS SI HAY RESULTADOS
+if ($resultado->num_rows > 0) {
+    $campos = $resultado->fetch_fields();
+    foreach ($campos as $i => $campo) {
+        $col = getColLetter($i + 1);
+        $hoja->setCellValue($col . '1', strtoupper($campo->name));
+    }
 
+    $filaExcel = 2;
+    while ($fila = $resultado->fetch_assoc()) {
+        foreach (array_values($fila) as $i => $valor) {
+            $col = getColLetter($i + 1);
+            $hoja->setCellValue($col . $filaExcel, $valor);
+        }
+        $filaExcel++;
+    }
+} else {
+    $hoja->setCellValue("A1", "No hay datos en la tabla bienes.");
+}
 
+// CERRAR CONEXIÓN
+$conexion->close();
 
+// FORZAR DESCARGA DEL EXCEL
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="tabla_bienes.xlsx"');
+header('Cache-Control: max-age=0');
 
 $writer = new Xlsx($spreadsheet);
-$writer->save('hello world.xlsx');
+$writer->save('php://output');
+exit;
