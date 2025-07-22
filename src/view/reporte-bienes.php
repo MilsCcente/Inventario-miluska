@@ -1,29 +1,26 @@
 <?php
 require './vendor/autoload.php';
-require_once './src/library/conexionn.php'; // Ruta corregida a tu archivo conexión
+require_once './src/library/conexionn.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-// OBTENER CONEXIÓN DESDE LA CLASE Conexion
+// CONECTAR A LA BD
 $conexion = Conexion::connect();
 
-// CONSULTA A LA BD
+// CONSULTA
 $sql = "SELECT * FROM bienes ORDER BY id ASC";
 $resultado = $conexion->query($sql);
 
 // CREAR EXCEL
 $spreadsheet = new Spreadsheet();
-$spreadsheet->getProperties()
-    ->setCreator("yp")
-    ->setLastModifiedBy("yo")
-    ->setTitle("Bienes")
-    ->setDescription("Listado de bienes");
-
 $hoja = $spreadsheet->getActiveSheet();
 $hoja->setTitle("Bienes");
 
-// FUNCIÓN PARA CONVERTIR ÍNDICES A LETRAS DE COLUMNA
+// FUNCIONES
 function getColLetter($index) {
     $letter = '';
     while ($index > 0) {
@@ -34,15 +31,23 @@ function getColLetter($index) {
     return $letter;
 }
 
-// LLENAR DATOS SI HAY RESULTADOS
+// SI HAY DATOS
 if ($resultado->num_rows > 0) {
     $campos = $resultado->fetch_fields();
+    
+    // ENCABEZADOS
     foreach ($campos as $i => $campo) {
         $col = getColLetter($i + 1);
-        $hoja->setCellValue($col . '1', strtoupper($campo->name));
+        $hoja->setCellValue($col . '2', strtoupper($campo->name));
+
+        // Estilo del encabezado
+        $hoja->getStyle($col . '2')->getFont()->setBold(true);
+        $hoja->getStyle($col . '2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $hoja->getStyle($col . '2')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('D9E1F2');
     }
 
-    $filaExcel = 2;
+    // CONTENIDO
+    $filaExcel = 3;
     while ($fila = $resultado->fetch_assoc()) {
         foreach (array_values($fila) as $i => $valor) {
             $col = getColLetter($i + 1);
@@ -50,14 +55,27 @@ if ($resultado->num_rows > 0) {
         }
         $filaExcel++;
     }
+
+    // AJUSTAR ANCHO DE COLUMNA Y AGREGAR BORDES
+    $totalColumnas = count($campos);
+    $ultimaFila = $filaExcel - 1;
+    for ($i = 1; $i <= $totalColumnas; $i++) {
+        $col = getColLetter($i);
+        $hoja->getColumnDimension($col)->setAutoSize(true);
+        
+        // Bordes para cada celda
+        $rango = $col . '2:' . $col . $ultimaFila;
+        $hoja->getStyle($rango)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+    }
+
 } else {
-    $hoja->setCellValue("A1", "No hay datos en la tabla bienes.");
+    $hoja->setCellValue("A2", "No hay datos en la tabla bienes.");
 }
 
-// CERRAR CONEXIÓN
+// CERRAR BD
 $conexion->close();
 
-// FORZAR DESCARGA DEL EXCEL
+// DESCARGA
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="tabla_bienes.xlsx"');
 header('Cache-Control: max-age=0');
