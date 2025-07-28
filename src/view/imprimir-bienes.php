@@ -3,9 +3,9 @@ require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
 
 // ---------------- CONEXIÓN A BASE DE DATOS ----------------
 $host = "localhost";
-$dbname = "inventario";
-$username = "root";
-$password = "";
+$dbname = "desarro4_miluska";
+$username = "desarro4_miluska";
+$password = "ccente.25.Rima";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
