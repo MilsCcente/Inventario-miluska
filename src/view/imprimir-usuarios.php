@@ -6,6 +6,7 @@ $host = "localhost";
 $dbname = "desarro4_miluska";
 $username = "desarro4_miluska";
 $password = "ccente.25.Rima";
+
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -27,8 +28,8 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
 // ---------------- PDF PERSONALIZADO ----------------
 class MYPDF extends TCPDF {
     public function Header() {
-        $this->Image('./src/view/pp/assets/images/logo.png', 15, 4, 33);
-        $this->Image('./src/view/pp/assets/images/drea.png', 170, 2, 24);
+        $this->Image('./src/view/pp/assets/images/gobierno.png', 15, -8, 43);
+        $this->Image('./src/view/pp/assets/images/dreaa.png', 170, 1, 18);
         $this->SetFont('helvetica', 'B', 12);
         $this->MultiCell(0, 5, "GOBIERNO REGIONAL DE AYACUCHO\nDIRECCIÓN REGIONAL DE EDUCACIÓN DE AYACUCHO\nDIRECCIÓN DE ADMINISTRACIÓN", 0, 'C');
         $y = $this->GetY();
