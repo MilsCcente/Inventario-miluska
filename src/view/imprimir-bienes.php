@@ -30,8 +30,8 @@ $bienes = $stmt->fetchAll(PDO::FETCH_OBJ);
 // ---------------- PDF PERSONALIZADO ----------------
 class MYPDF extends TCPDF {
     public function Header() {
-        $this->Image('./src/view/pp/assets/images/gobierno.png', 15, 4, 33);
-        $this->Image('./src/view/pp/assets/images/dreaa.png', 170, 2, 24);
+        $this->Image('./src/view/pp/assets/images/gobierno.png', 15, -8, 43);
+        $this->Image('./src/view/pp/assets/images/dreaa.png', 170, 1, 18);
         $this->SetFont('helvetica', 'B', 12);
         $this->MultiCell(0, 5, "GOBIERNO REGIONAL DE AYACUCHO\nDIRECCIÓN REGIONAL DE EDUCACIÓN DE AYACUCHO\nDIRECCIÓN DE ADMINISTRACIÓN", 0, 'C');
         $y = $this->GetY();

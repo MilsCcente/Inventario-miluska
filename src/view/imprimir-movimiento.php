@@ -96,9 +96,8 @@ if ($err) {
 
     public function Header() {
       
-$this->Image('./src/view/pp/assets/images/gobierno.png', 15, 4, 40); // (archivo, x, y, ancho)
-      // Insertar imagen derecha
-      $this->Image('./src/view/pp/assets/images/dreaa.png', 170, 2, 25);
+$this->Image('./src/view/pp/assets/images/gobierno.png', 15, -8, 43);
+        $this->Image('./src/view/pp/assets/images/dreaa.png', 170, 1, 18);
 
 
 
